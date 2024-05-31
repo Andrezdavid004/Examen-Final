@@ -1,0 +1,102 @@
+Punto 1.
+1. Configurar la maquina virtual con la interfaz de freepbx, dentro de ella se utiliza el comando service asterisk start, con el fin de habilitar la pagina de freepbx
+ administration 
+2. Dentro de la pagina se configuran 4 extensiones, se configura una contestadora de voz, se configura un ring group para hacer llamadas por medio de la contestadora de voz
+tambien se configura el numero de la llamada, en este caso 445
+3. Por medio wireshark, entrando a wifi dentro de la aplicacion y utilizando el comando sip, podemos visualizar cuando se cuelga o se contesta la llamada. 
+4. Para hacer esta visualizacion dentro del entorno de freepbx se utilizo el comando "asterisk -rvvvvvv"
+
+Anexo imagenes.
+
+Punto 2.
+1.	Sudo groupadd –system prometheus 			// sirve para crear un grupo de sistema llamado Prometheus 
+2.	Sudo useadd -s /sbin/nologin –system -g Prometheus Prometheus 		// sirve para crear un usuario de sistema llamado prometheus en un sistema operativo basado en Linux.
+Crear directorios de prometheus
+
+3.	Sudo mkdir /etc/prometheus 		//creamos los directorios de prometheus
+4.	Sudo mkdir /var/lib/prometheus
+// Instalar Prometheus
+5.	Wget https://github.com/prometheus/prometheus/prometheus/releases/download/v2.52.0/prometheus-2.52.0.linux-amd64.tar.gz
+//Wget es una herramienta de línea de comandos utilizada para descargar archivos desde la web.
+6.	Verificar que este instalado
+7.	Tar -xvf prometheus-2.52.0.linux-amd64.tar.gz
+//Descargar y extraer archivos necesarios
+8.	Verificamos el contenido del prometheus 
+9.	Hemos movido el archivo binario y los archivos binarios en el directorio y configuramos la propiedad correcta del archivo y del directorio.
+
+Configuración 
+10.	Sudo vim /etc/prometheus/prometheus.yml
+{
+  evaluation_interval: 15s # Evaluate rules every 15 seconds. The default is every 1 minute.
+  # scrape_timeout is set to the global default (10s).
+
+  # Attach these labels to any time series or alerts when communicating with
+  # external systems (federation, remote storage, Alertmanager).
+  external_labels:
+      monitor: 'example'
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+  - static_configs:
+    - targets: ['localhost:9093']
+
+# Load rules once and periodically evaluate them according to the global 'evaluation_interval'.
+rule_files:
+  # - "first_rules.yml"
+  # - "second_rules.yml"
+
+# A scrape configuration containing exactly one endpoint to scrape:
+# Here it's Prometheus itself.
+scrape_configs:
+  # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
+  - job_name: 'prometheus'
+
+    # Override the global default and scrape targets from this job every 5 seconds.
+    scrape_interval: 5s
+    scrape_timeout: 5s
+
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: node
+    # If prometheus-node-exporter is installed, grab stats about the local
+    # machine by default.
+    static_configs:
+      - targets: ['localhost:9100']
+"prometheus.yml" 44L, 1429B
+}
+11.	Sudo vim (ruta)prometheus.service //Configurar servicios de prometheus
+
+12.	Sudo systemctl start prometheus 		//se inicia el prometheus con el comando 
+13.	Sudo system enable prometheus 		//Se habilita el servicio de prometheus
+14.	Sudo ss -pnltu | grep 9090 // Se ejecuta este comando para listar todas las conexiones y puertos de red activos y luego filtrar el resultado para mostrar solo las líneas que contiene el puerto 9090
+
+
+15.	Y por último se verifica que se pueda ingresar a la página con la ip 192.168.60.3:9090
+Instalacion node exporter
+16. Instalamos el node exporter "Wget http://github.com/prometheus/node_exporter/releases/dowunload/v1.8.1/node_exporter-1.8.1.linux-amd64.tar.gz"
+17. Extraemos los archivos "Tar -xvf node_exporter-1.8.1.linux-amd64.tar.gz"
+18. Mover el ejecutable "Sudo mv node_exporter-1-8-1-linux-amd64/node_exporter /usr/local/bin"
+19. Crear un usuario para node exporter "Sudo useradd -rs /bin/false node_exporter"
+20.Se crea el archivo del servicio y se configura "Sudo vim /systemd/system/node_exporter.service"
+21. Y se reinicia "Sudo systemctl Daemon-reload"
+22. Se inicia y luego se mira el estado del servicio de node exporter "Sudo systemctl start node_exporter" "Sudo systemctl status node_exporter"
+23. Se habilita el servicio de node exporter "Sudo systemctl enable node_exporter"
+24. Se va a la ruta "sudo vim /etc/prometheus/prometheus.yml" y agregamos la configuracion
+25. Por ultimo vamos a la pagina para revisar el funcionamiento.
+
+Anexo imagenes.
+
+Punto 3. 
+dockr compose 
+1. "Sudo vim docker cmpose" puerto se asigna el puerto 32000 para la conexión de base de datos
+2. "Cd webapp" Entramos al directorio webapp
+3. "Sudo vim dockerfl"  empaqueta toda la aplicacon dentro de un contenedor y la ejecuta desde alla, espera a que uno descargue el contenedor y el lo ejecuta
+4. "Sudo vim config"  para decirle 	que ya no apunte al local host porque ese es la maquina y dentro de la maquina ya no se está ejecutando la aplicación sin o en el contenedor, el que contiene la aplicación y allí se encarga de editarla y conectarla a la aplicación
+5. "Sudo docker up-" se levanta la pagina de docker.
+
+Anexo imagenes.
