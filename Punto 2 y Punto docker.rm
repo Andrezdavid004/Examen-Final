@@ -1,0 +1,25 @@
+1.	Sudo groupadd –system prometheus 			// sirve para crear un grupo de sistema llamado Prometheus 
+2.	Sudo useadd -s /sbin/nologin –system -g Prometheus Prometheus 		// sirve para crear un usuario de sistema llamado prometheus en un sistema operativo basado en Linux.
+Crear directorios de prometheus
+
+3.	Sudo mkdir /etc/prometheus 		//creamos los directorios de prometheus
+4.	Sudo mkdir /var/lib/prometheus
+// Instalar Prometheus
+5.	Wget https://github.com/prometheus/prometheus/prometheus/releases/download/v2.52.0/prometheus-2.52.0.linux-amd64.tar.gz
+//Wget es una herramienta de línea de comandos utilizada para descargar archivos desde la web.
+6.	Verificar que este instalado
+7.	Tar -xvf prometheus-2.52.0.linux-amd64.tar.gz
+//Descargar y extraer archivos necesarios
+8.	Verificamos el contenido del prometheus 
+9.	Hemos movido el archivo binario y los archivos binarios en el directorio y configuramos la propiedad correcta del archivo y del directorio.
+
+Configuración 
+10.	Sudo vim /etc/prometheus/prometheus.yml
+11.	Sudo vim (ruta)prometheus.service //Configurar servicios de prometheus
+
+12.	Sudo systemctl start prometheus 		//se inicia el prometheus con el comando 
+13.	Sudo system enable prometheus 		//Se habilita el servicio de prometheus
+14.	Sudo ss -pnltu | grep 9090 // Se ejecuta este comando para listar todas las conexiones y puertos de red activos y luego filtrar el resultado para mostrar solo las líneas que contiene el puerto 9090
+
+
+15.	Y por último se verifica que se pueda ingresar a la página con la ip 192.168.60.3:9090
